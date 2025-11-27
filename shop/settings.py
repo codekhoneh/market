@@ -1,4 +1,3 @@
-
 import os
 """
 Django settings for shop project.
@@ -131,4 +130,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Use the custom user model from account_app
-AUTH_USER_MODEL = 'account_app.User'
+AUTH_USER_MODEL = "account_app.User" 
+LOGIN_REDIRECT_URL = "/"        # یم ریسم نیا هب ربراک قفوم نیگلا زا دعب دور 
+LOGOUT_REDIRECT_URL = "/login/" # یمرب نیگلا هحفص هب ربراک جورخ زا دعب ددرگ 
+ROOT_URLCONF = 'shop.urls' 
+LANGUAGE_CODE = 'fa-in' 
+TIME_ZONE = 'UTC' 
+USE_I18N = True 
+USE_TZ = True 
+import os 
+STATIC_URL = 'static/' 
+STATICFILES_DIRS=[os.path.join(BASE_DIR,'static')] 
+MEDIA_URL = 'media/' 
+MEDIA_ROOT = os.path.join(BASE_DIR,'media') 
+# Default primary key field type 
+# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field 

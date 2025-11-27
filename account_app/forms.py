@@ -37,3 +37,17 @@ class UserChangeForm(forms.ModelForm):
 
     def clean_password(self): 
         return self.instance.password
+# ------------------------------------------------------------------------------------
+class LoginForm(forms.Form): 
+    phone = forms.CharField( 
+        widget=forms.TextInput(attrs={ 
+            'class': 'form-control phone-field', 
+            'placeholder': ' شماره تلفن خود را وارد کنید' 
+        }) 
+    ) 
+    password = forms.CharField( 
+        widget=forms.PasswordInput(attrs={ 
+            'class': 'form-control password-field', 
+            'placeholder': 'رمز عبور خود را وارد کنید' 
+        }), 
+        strip=False    )
