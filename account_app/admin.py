@@ -2,8 +2,11 @@ from django.contrib import admin
 from django import forms 
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin 
 from django.contrib.auth.forms import ReadOnlyPasswordHashField 
-from account_app.models import User
-
+from account_app.models import User, OTP 
+from account_app.forms import UserCreationForm, UserChangeForm 
+@admin.register(OTP) 
+class OTPAdmin(admin.ModelAdmin): 
+    list_display = ('phone', 'code', 'created_at') 
 class UserCreationForm(forms.ModelForm): 
     """ساخت فرم کاربر جدید در پنل ادمین """ 
     password1 = forms.CharField(label='گذروتژه', widget=forms.PasswordInput) 
