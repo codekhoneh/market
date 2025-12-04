@@ -4,7 +4,44 @@ from django.contrib.auth.models import Group
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin 
 from django.contrib.auth.forms import ReadOnlyPasswordHashField 
 from django.core.exceptions import ValidationError 
+from django.core.validators import RegexValidator
 from account_app.models import User
+from django.core import validators
+
+def fa_to_en_digits(s):
+    """تبدیل اعداد فارسی به انگلیسی"""
+    mapping = str.maketrans('۰۱۲۳۴۵۶۷۸۹', '0123456789')
+    return s.translate(mapping)
+
+phone_validator = RegexValidator(
+    regex=r'^09\d{9}$',
+    message='شماره تلفن باید با 09 شروع شود و 11 رقم باشد',
+) 
+ 
+class RegisterForm(forms.Form): 
+    phone = forms.CharField( 
+        max_length=11, 
+        validators=[phone_validator], 
+        label="شماره تلفن", 
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "مثال: 09301234567"})
+    )
+    password = forms.CharField(
+        label="رمز عبور",
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "رمز عبور خود را وارد کنید"})
+    )
+    
+    def clean_phone(self): 
+        phone = self.cleaned_data.get('phone', '') 
+        phone = fa_to_en_digits(phone) 
+        phone = ''.join(phone.split())     
+        phone = phone.replace('-', '')      
+        return phone
+class CheckOTPForm(forms.Form): 
+    code = forms.CharField( 
+    max_length=4, 
+    validators=[RegexValidator(regex=r'^\d{4}$', message=" کد باید شامل 4 رقم باشد")], 
+    label="کد امنیتی", 
+    widget=forms.TextInput(attrs={"placeholder": "کد ارسال شده را وارد کنید"}))
 
 class UserCreationForm(forms.ModelForm): 
     password1 = forms.CharField(label='گذر واژه', widget=forms.PasswordInput) 
