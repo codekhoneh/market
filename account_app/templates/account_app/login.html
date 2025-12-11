@@ -1,5 +1,6 @@
 {% extends "base.html" %} 
-{% load static %} 
+{% load static %}
+{% block title %}Login{% endblock %}
 {% block main %}
     <!-- Contact Start -->
     <div class="container-fluid">
@@ -11,12 +12,9 @@
                     {% csrf_token %} 
                      
                     <div class="form-group mb-3"> 
-                        {{ form.phone }} 
-                        {% if form.phone.errors %} 
- 
-
- 
-                            <div class="invalid-feedback d-block">{{ form.phone.errors }}</div> 
+                        {{ form.identifier }} 
+                        {% if form.identifier.errors %} 
+                            <div class="invalid-feedback d-block">{{ form.identifier.errors }}</div> 
                         {% endif %} 
                     </div> 
  
@@ -26,13 +24,15 @@
                         {% if form.password.errors %} 
                             <div class="invalid-feedback d-block">{{ form.password.errors }}</div> 
                         {% endif %} 
-                    </div>                   
-                    <div> 
-                        <button class="btn btn-primary py-2 px-4" type="submit">ورود </button> 
                     </div> 
+ 
+                    <div> 
+                        <button class="btn btn-primary py-2 px-4" type="submit">ورود</button> 
+                    </div> 
+ 
                     {% if form.non_field_errors %} 
                         <div class="text-danger mt-2">{{ form.non_field_errors }}</div> 
-                    {% endif %} 
+                    {% endif %}  
                 </form> 
             </div> 
         </div> 
