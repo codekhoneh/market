@@ -12,7 +12,30 @@ def fa_to_en_digits(s):
     """تبدیل اعداد فارسی به انگلیسی"""
     mapping = str.maketrans('۰۱۲۳۴۵۶۷۸۹', '0123456789')
     return s.translate(mapping)
-
+def validate_password_strength(password): 
+    """ 
+    بررسی قانون رمز عبور:
+    - حداقل ۸ کاراکتر
+    - شامل حرف بزرگ
+    - شامل حرف کوچک
+    - شامل عدد
+    - شامل کاراکتر خاص
+    """ 
+    if len(password) < 8: 
+        raise ValidationError("رمز عبور حداقل شامل ۸ کاراکتر باشد") 
+     
+    if not any(c.isupper() for c in password): 
+        raise ValidationError("رمز عبور باید شامل حرف بزرگ باشد") 
+     
+    if not any(c.islower() for c in password): 
+        raise ValidationError("رمز عبور باید شامل حرف کوچک باشد") 
+     
+    if not any(c.isdigit() for c in password): 
+        raise ValidationError("رمز عبور باید شامل عدد باشد") 
+     
+    special_chars = "!@#$%^&*()_+-=[]{}|;:,.<>?" 
+    if not any(c in special_chars for c in password): 
+        raise ValidationError("رمز عبور باید شامل کاراکتر خاص باشد(!@#$%^&*و غیره)")
 phone_validator = RegexValidator(
     regex=r'^09\d{9}$',
     message='شماره تلفن باید با 09 شروع شود و 11 رقم باشد',
@@ -23,13 +46,28 @@ class RegisterForm(forms.Form):
         max_length=11, 
         validators=[phone_validator], 
         label="شماره تلفن", 
-        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "مثال: 09301234567"})
-    )
-    password = forms.CharField(
-        label="رمز عبور",
-        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "رمز عبور خود را وارد کنید"})
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "مثال: 09301234567"}),
     )
     
+    password = forms.CharField(
+        label="رمز عبور",
+        widget=forms.PasswordInput(attrs={"class": "form-control", "placeholder": "رمز عبور خود را وارد کنید"}),
+    )
+    email = forms.EmailField( 
+        required=False, 
+        label="ایمیل", 
+        widget=forms.EmailInput(attrs={ 
+            "class": "form-control", 
+            "placeholder": "مثال: user@example.com" 
+        })
+    )
+    def clean(self): 
+        cleaned = super().clean() 
+        phone = cleaned.get("phone") 
+        email = cleaned.get("email") 
+        if not phone and not email: 
+            raise ValidationError("وارد کردن شماره تلفن یا ایمیل الزامی است") 
+        return cleaned 
     def clean_phone(self): 
         phone = self.cleaned_data.get('phone', '') 
         phone = fa_to_en_digits(phone) 
@@ -76,15 +114,19 @@ class UserChangeForm(forms.ModelForm):
         return self.instance.password
 # ------------------------------------------------------------------------------------
 class LoginForm(forms.Form): 
-    phone = forms.CharField( 
+    identifier = forms.CharField( 
+        label="ایمیل یا شماره تلفن", 
         widget=forms.TextInput(attrs={ 
-            'class': 'form-control phone-field', 
-            'placeholder': ' شماره تلفن خود را وارد کنید' 
-        }) 
-    ) 
+            'class': 'form-control identifier-field', 
+            'placeholder': 'ایمیل یا شماره تلفن خود را وارد کنید' 
+        }))
     password = forms.CharField( 
+        label="رمز عبور", 
         widget=forms.PasswordInput(attrs={ 
             'class': 'form-control password-field', 
-            'placeholder': 'رمز عبور خود را وارد کنید' 
-        }), 
-        strip=False    )
+            'placeholder': 'رمز عبور خود را وارد کنید'}), strip=False)
+    
+    def clean_identifier(self): 
+        ident = self.cleaned_data.get('identifier', '').strip() 
+        ident = fa_to_en_digits(ident).replace('-', '').replace(' ', '')
+        return ident

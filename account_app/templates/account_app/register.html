@@ -1,5 +1,6 @@
 {% extends "base.html" %} 
 {% load static %} 
+{% block title %}Register{% endblock %}
 {% block main %}
     <!-- Contact Start -->
     <div class="container-fluid">
@@ -14,17 +15,11 @@
                     {% endfor %} 
                 {% endif %} 
  
-                <form method="post" > 
+                <form method="post"  id="registerForm" novalidate> 
                     {% csrf_token %} 
  
                     <!--  یلک یاهاطخ--> 
-                    {% if form.non_field_errors %} 
-                        <div class="alert alert-danger"> 
-                            {% for error in form.non_field_errors %} 
-                                <p>{{ error }}</p> 
-                            {% endfor %} 
-                        </div> 
-                    {% endif %} 
+                   
 
                     <!--  نفلت هرامش--> 
                     <div class="form-group mb-3"> 
@@ -37,20 +32,29 @@
                             </div> 
                         {% endif %} 
                     </div> 
+                    <div class="form-group mb-3"> 
+                        {{ form.email }} 
+                        {% if form.email.errors %} 
+                            <div class="invalid-feedback d-block">{{ form.email.errors }}</div> 
+                        {% endif %} 
+                    </div> 
                     <!--  روبع زمر--> 
                     <div class="form-group mb-3"> 
                         {{ form.password }} 
+                        {% if form.password.help_text %} 
+                            <small class="form-text text-muted d-block mt-2">{{ form.password.help_text|safe 
+                            }}</small> 
+                        {% endif %} 
                         {% if form.password.errors %} 
-                            <div class="invalid-feedback d-block"> 
-                                {% for error in form.password.errors %} 
-                                    {{ error }} 
-                                {% endfor %} 
-                            </div> 
+                            <div class="invalid-feedback d-block">{{ form.password.errors }}</div> 
                         {% endif %} 
                     </div> 
                     <div> 
                         <button class="btn btn-success py-2 px-4" type="submit">ارسال</button> 
                     </div> 
+                    {% if form.non_field_errors %} 
+                        <div class="text-danger mt-2">{{ form.non_field_errors }}</div> 
+                    {% endif %} 
                 </form> 
             </div> 
         </div> 
