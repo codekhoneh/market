@@ -1,0 +1,217 @@
+{% extends "base.html" %} 
+{% load static %}
+{% block title %}product_list{% endblock %}
+{% block main %}
+    <!-- Breadcrumb Start -->
+    <div class="container-fluid">
+        <div class="row px-xl-5">
+            <div class="col-12">
+                <nav class="breadcrumb bg-light mb-30">
+                    <a class="breadcrumb-item text-dark" href="{% url 'home:main' %}">Home</a>
+                    
+                </nav>
+            </div>
+        </div>
+    </div>
+    <!-- Breadcrumb End -->
+
+    <!-- Shop Sidebar Start -->
+<div class="container-fluid">
+    <div class="row px-xl-5">
+
+        <!-- Sidebar Start -->
+        <div class="col-lg-3 col-md-4 mb-4">
+            <div class="bg-light p-4 rounded shadow-sm">
+
+                <!-- Price -->
+                <h5 class="section-title text-uppercase mb-3">
+                    <span class="bg-secondary px-3 py-1 rounded">Filter by price</span>
+                </h5>
+              <form method="get" class="bg-light p-4 mb-4 rounded">
+
+    <!-- PRICE FILTER -->
+    <h5 class="section-title text-uppercase mb-3">
+        <span class="bg-secondary px-3 py-1 rounded">Filter by price</span>
+    </h5>
+
+    <div class="custom-control custom-checkbox mb-2">
+        <input type="checkbox" class="custom-control-input"
+               id="price-1" name="price" value="0-100">
+        <label class="custom-control-label d-flex justify-content-between"
+               for="price-1">
+            $0 - $100
+            <span class="badge badge-light">150</span>
+        </label>
+    </div>
+
+    <div class="custom-control custom-checkbox mb-2">
+        <input type="checkbox" class="custom-control-input"
+               id="price-2" name="price" value="100-200">
+        <label class="custom-control-label d-flex justify-content-between"
+               for="price-2">
+            $100 - $200
+            <span class="badge badge-light">295</span>
+        </label>
+    </div>
+
+    <div class="custom-control custom-checkbox mb-4">
+        <input type="checkbox" class="custom-control-input"
+               id="price-3" name="price" value="200-300">
+        <label class="custom-control-label d-flex justify-content-between"
+               for="price-3">
+            $200 - $300
+            <span class="badge badge-light">246</span>
+        </label>
+    </div>
+
+    <!-- COLOR FILTER -->
+    <h5 class="section-title text-uppercase mb-3">
+        <span class="bg-secondary px-3 py-1 rounded">Filter by color</span>
+    </h5>
+
+    {% for color in colors %}
+    <div class="custom-control custom-checkbox mb-2">
+        <input type="checkbox" class="custom-control-input"
+               id="color-{{ color.id }}"
+               name="color"
+               value="{{ color.id }}">
+        <label class="custom-control-label d-flex justify-content-between"
+               for="color-{{ color.id }}">
+            {{ color.title }}
+        </label>
+    </div>
+    {% endfor %}
+
+    <!-- SIZE FILTER -->
+    <h5 class="section-title text-uppercase mb-3 mt-4">
+        <span class="bg-secondary px-3 py-1 rounded">Filter by size</span>
+    </h5>
+
+    {% for size in sizes %}
+    <div class="custom-control custom-checkbox mb-2">
+        <input type="checkbox" class="custom-control-input"
+               id="size-{{ size.id }}"
+               name="size"
+               value="{{ size.id }}">
+        <label class="custom-control-label d-flex justify-content-between"
+               for="size-{{ size.id }}">
+            {{ size.title }}
+        </label>
+    </div>
+    {% endfor %}
+
+    <!-- SUBMIT -->
+    <button type="submit" class="btn btn-primary btn-block mt-4">
+        اعمال فیلتر
+    </button>
+
+</form>
+
+            </div>
+        </div>
+        <!-- Sidebar End -->
+
+        <!-- Products Start -->
+        <div class="col-lg-9 col-md-8">
+            <div class="row">
+
+                {% for product in products %}
+                <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
+                    <div class="product-item bg-light mb-4 rounded shadow-sm">
+                        <div class="product-img position-relative overflow-hidden">
+                            <a href="{% url 'product_detail' product.slug %}">
+                                <img class="img-fluid w-100" src="{{ product.image.url }}" alt="{{ product.title }}">
+                            </a>
+                        </div>
+
+                        <div class="text-center py-4">
+                            <h6 class="text-truncate mb-3">
+                                <a href="{% url 'product_detail' product.slug %}" class="text-dark">
+                                    {{ product.title }}
+                                </a>
+                            </h6>
+
+                            <div class="d-flex justify-content-center">
+                                {% if product.discount > 0 %}
+                                    <h6 class="text-danger">
+                                        {{ product.discounted_price }} تومان
+                                    </h6>
+                                    <h6 class="text-muted ml-2">
+                                        <del>{{ product.price }} تومان</del>
+                                    </h6>
+                                {% else %}
+                                    <h6>{{ product.price }} تومان</h6>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <p class="text-center w-100">هیچ محصولی برای نمایش وجود ندارد.</p>
+                {% endfor %}
+
+                <!-- Pagination -->
+                <div class="col-12 mt-4">
+                    {% if is_paginated %}
+                        <nav>
+                            <ul class="pagination pagination-lg justify-content-center shadow-sm">
+
+                                {% if page_obj.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link rounded-left" href="?page={{ page_obj.previous_page_number }}">
+                                            <i class="fa fa-angle-left"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link rounded-left">
+                                            <i class="fa fa-angle-left"></i>
+                                        </span>
+                                    </li>
+                                {% endif %}
+
+                                {% for page in paginator.page_range %}
+                                    {% if page == page_obj.number %}
+                                        <li class="page-item active">
+                                            <span class="page-link font-weight-bold">{{ page }}</span>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item">
+                                            <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if page_obj.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link rounded-right" href="?page={{ page_obj.next_page_number }}">
+                                            <i class="fa fa-angle-right"></i>
+                                        </a>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item disabled">
+                                        <span class="page-link rounded-right">
+                                            <i class="fa fa-angle-right"></i>
+                                        </span>
+                                    </li>
+                                {% endif %}
+
+                            </ul>
+                        </nav>
+                    {% endif %}
+                </div>
+                <!-- Pagination End -->
+
+            </div>
+        </div>
+        <!-- Products End -->
+
+    </div>
+</div>
+
+
+    
+    <!-- Shop End -->
+{% endblock %}
+
+   
