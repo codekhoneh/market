@@ -19,136 +19,110 @@
 <div class="container-fluid">
     <div class="row px-xl-5">
 
-        <!-- Sidebar Start -->
-        <div class="col-lg-3 col-md-4 mb-4">
-            <div class="bg-light p-4 rounded shadow-sm">
-
-                <!-- Price -->
-                <h5 class="section-title text-uppercase mb-3">
-                    <span class="bg-secondary px-3 py-1 rounded">Filter by price</span>
-                </h5>
-              <form method="get" class="bg-light p-4 mb-4 rounded">
-
-    <!-- PRICE FILTER -->
-    <h5 class="section-title text-uppercase mb-3">
-        <span class="bg-secondary px-3 py-1 rounded">Filter by price</span>
-    </h5>
-
-    <div class="custom-control custom-checkbox mb-2">
-        <input type="checkbox" class="custom-control-input"
-               id="price-1" name="price" value="0-100">
-        <label class="custom-control-label d-flex justify-content-between"
-               for="price-1">
-            $0 - $100
-            <span class="badge badge-light">150</span>
-        </label>
-    </div>
-
-    <div class="custom-control custom-checkbox mb-2">
-        <input type="checkbox" class="custom-control-input"
-               id="price-2" name="price" value="100-200">
-        <label class="custom-control-label d-flex justify-content-between"
-               for="price-2">
-            $100 - $200
-            <span class="badge badge-light">295</span>
-        </label>
-    </div>
-
-    <div class="custom-control custom-checkbox mb-4">
-        <input type="checkbox" class="custom-control-input"
-               id="price-3" name="price" value="200-300">
-        <label class="custom-control-label d-flex justify-content-between"
-               for="price-3">
-            $200 - $300
-            <span class="badge badge-light">246</span>
-        </label>
-    </div>
-
-    <!-- COLOR FILTER -->
-    <h5 class="section-title text-uppercase mb-3">
-        <span class="bg-secondary px-3 py-1 rounded">Filter by color</span>
-    </h5>
-
-    {% for color in colors %}
-    <div class="custom-control custom-checkbox mb-2">
-        <input type="checkbox" class="custom-control-input"
-               id="color-{{ color.id }}"
-               name="color"
-               value="{{ color.id }}">
-        <label class="custom-control-label d-flex justify-content-between"
-               for="color-{{ color.id }}">
-            {{ color.title }}
-        </label>
-    </div>
-    {% endfor %}
-
-    <!-- SIZE FILTER -->
-    <h5 class="section-title text-uppercase mb-3 mt-4">
-        <span class="bg-secondary px-3 py-1 rounded">Filter by size</span>
-    </h5>
-
-    {% for size in sizes %}
-    <div class="custom-control custom-checkbox mb-2">
-        <input type="checkbox" class="custom-control-input"
-               id="size-{{ size.id }}"
-               name="size"
-               value="{{ size.id }}">
-        <label class="custom-control-label d-flex justify-content-between"
-               for="size-{{ size.id }}">
-            {{ size.title }}
-        </label>
-    </div>
-    {% endfor %}
-
-    <!-- SUBMIT -->
-    <button type="submit" class="btn btn-primary btn-block mt-4">
-        اعمال فیلتر
-    </button>
-
-</form>
+     
 
             </div>
         </div>
         <!-- Sidebar End -->
 
         <!-- Products Start -->
-        <div class="col-lg-9 col-md-8">
-            <div class="row">
+<div class="col-lg-9 col-md-8 mx-auto">
+    <div class="row justify-content-center">
 
-                {% for product in products %}
-                <div class="col-lg-4 col-md-6 col-sm-6 pb-1">
-                    <div class="product-item bg-light mb-4 rounded shadow-sm">
-                        <div class="product-img position-relative overflow-hidden">
-                            <a href="{% url 'product_detail' product.slug %}">
-                                <img class="img-fluid w-100" src="{{ product.image.url }}" alt="{{ product.title }}">
-                            </a>
-                        </div>
+        {% for product in products %}
+        <div class="col-lg-4 col-md-6 col-sm-6 pb-4 d-flex justify-content-center">
+            <div class="product-item bg-light rounded shadow-sm h-100 position-relative w-100">
 
-                        <div class="text-center py-4">
-                            <h6 class="text-truncate mb-3">
-                                <a href="{% url 'product_detail' product.slug %}" class="text-dark">
-                                    {{ product.title }}
-                                </a>
-                            </h6>
+                <!-- Badge (Discount / Availability) -->
+                {% if not product.is_available %}
+                    <span class="badge badge-secondary position-absolute" style="top:10px;right:10px;z-index:2;">
+                        ناموجود
+                    </span>
+                {% elif product.discount > 0 %}
+                    <span class="badge badge-danger position-absolute" style="top:10px;right:10px;z-index:2;">
+                        {{ product.discount }}٪ تخفیف
+                    </span>
+                {% endif %}
 
-                            <div class="d-flex justify-content-center">
-                                {% if product.discount > 0 %}
-                                    <h6 class="text-danger">
-                                        {{ product.discounted_price }} تومان
-                                    </h6>
-                                    <h6 class="text-muted ml-2">
-                                        <del>{{ product.price }} تومان</del>
-                                    </h6>
-                                {% else %}
-                                    <h6>{{ product.price }} تومان</h6>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
+                <!-- Product Image -->
+                <div class="product-img position-relative overflow-hidden">
+                    <a href="{% url 'product_detail' product.slug %}">
+                        <img class="img-fluid w-100" src="{{ product.image.url }}" alt="{{ product.title }}">
+                    </a>
                 </div>
-                {% empty %}
-                <p class="text-center w-100">هیچ محصولی برای نمایش وجود ندارد.</p>
-                {% endfor %}
+
+                <!-- Product Info -->
+                <div class="text-center p-3 d-flex flex-column">
+
+                    <h6 class="text-truncate mb-2">
+                        <a href="{% url 'product_detail' product.slug %}" class="text-dark">
+                            {{ product.title }}
+                        </a>
+                    </h6>
+
+                    <small class="text-muted mb-2">
+                        {{ product.short_description }}
+                    </small>
+
+                    <div class="mb-2">
+                        {% if product.discount > 0 %}
+                            <span class="text-danger font-weight-bold">
+                                {{ product.discounted_price|floatformat:0 }} تومان
+                            </span>
+                            <small class="text-muted ml-1">
+                                <del>{{ product.price|floatformat:0 }}</del>
+                            </small>
+                        {% else %}
+                            <span class="font-weight-bold">
+                                {{ product.price|floatformat:0 }} تومان
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    {% if product.size.all %}
+                        <div class="mb-2">
+                            {% for size in product.size.all %}
+                                <span class="badge badge-light border">{{ size.title }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    {% if product.color.all %}
+                        <div class="mb-3">
+                            {% for color in product.color.all %}
+                                <span class="badge badge-pill badge-secondary">{{ color.title }}</span>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="mt-auto d-flex justify-content-center">
+                        <a href="{% url 'product_detail' product.slug %}"
+                           class="btn btn-outline-dark btn-sm mx-1">
+                            مشاهده
+                        </a>
+
+                        {% if product.is_available %}
+                            <button class="btn btn-primary btn-sm mx-1">
+                                افزودن به سبد
+                            </button>
+                        {% else %}
+                            <button class="btn btn-secondary btn-sm mx-1" disabled>
+                                ناموجود
+                            </button>
+                        {% endif %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <p class="text-center w-100">هیچ محصولی برای نمایش وجود ندارد.</p>
+        {% endfor %}
+
+    </div>
+</div>
+<!-- Products End -->
+
 
                 <!-- Pagination -->
                 <div class="col-12 mt-4">
