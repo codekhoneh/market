@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'home_app.apps.HomeAppConfig', 
     'account_app.apps.AccountAppConfig',
+    'product_app.apps.ProductAppConfig',
     'admin_persian',
 ]
 
