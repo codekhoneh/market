@@ -41,74 +41,52 @@
                     <h3>{{product_d.title}}</h3>
                     <h3 class="font-weight-semi-bold mb-4">{{product_d.price}}</h3>
                     <p class="mb-4">{{product_d.description}}</p>
-                    <div class="d-flex mb-3">
-                        <strong class="text-dark mr-3">Sizes:</strong>
-                        <form>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="size-1" name="size">
-                                <label class="custom-control-label" for="size-1">XS</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="size-2" name="size">
-                                <label class="custom-control-label" for="size-2">S</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="size-3" name="size">
-                                <label class="custom-control-label" for="size-3">M</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="size-4" name="size">
-                                <label class="custom-control-label" for="size-4">L</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="size-5" name="size">
-                                <label class="custom-control-label" for="size-5">XL</label>
-                            </div>
-                        </form>
+                     <div class="d-flex mb-3"> 
+                        {% if product_d.size.all  %} 
+ 
+                            <strong class="text-dark mr-3">Sizes:</strong> 
+                        {% endif %} 
+                         <form action="{% url 'order:order_add' product_d.id %}" method="post"> 
+                            {% csrf_token %} 
+                                    {% for s in product_d.size.all %} 
+                                        <div class="custom-control custom-radio custom-control-inline"> 
+                                            <input type="radio" class="custom-control-input" id="size-{{ forloop.counter }}" name="size" value="{{ s.title }}"> 
+                                            <label class="custom-control-label" for="size-{{ forloop.counter }}">{{ s.title }}</label> 
+                                        </div> 
+                                    {% endfor %} 
+                            </div> 
+                            <div class="d-flex mb-4"> 
+                                <strong class="text-dark mr-3">Colors:</strong> 
+                                 
+                                    {% for c in product_d.color.all %} 
+                                        <div class="custom-control custom-radio custom-control-inline"> 
+                                            <input type="radio" class="custom-control-input" id="color-{{ forloop.counter }}" name="color" value="{{ c.title }}"> 
+                                            <label class="custom-control-label" for="color-{{ forloop.counter }}">{{ c.title }}</label> 
+                                        </div> 
+                                    {% endfor %} 
+                            </div> 
+                            <div class="d-flex align-items-center mb-4 pt-2"> 
+                                <div class="input-group quantity mr-3" style="width: 130px;"> 
+                                    <div class="input-group-btn"> 
+                                        <button  type= "button" class="btn btn-primary btn-minus"> 
+ 
+
+ 
+                                            <i class="fa fa-minus"></i> 
+                                        </button> 
+                                    </div> 
+                                    <input type="text" class="form-control bg-secondary border-0 text-center" value="1" name="quantity"> 
+                                    <div class="input-group-btn"> 
+                                        <button  type= "button" class="btn btn-primary btn-plus"> 
+                                            <i class="fa fa-plus"></i> 
+                                        </button>- 
+                                    </div> 
+                                </div> 
+                                <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> 
+ 
+                                  Add To Cart</button> 
+                        </form>  
                     </div>
-                    <div class="d-flex mb-4">
-                        <strong class="text-dark mr-3">Colors:</strong>
-                        <form>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="color-1" name="color">
-                                <label class="custom-control-label" for="color-1">Black</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="color-2" name="color">
-                                <label class="custom-control-label" for="color-2">White</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="color-3" name="color">
-                                <label class="custom-control-label" for="color-3">Red</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="color-4" name="color">
-                                <label class="custom-control-label" for="color-4">Blue</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" class="custom-control-input" id="color-5" name="color">
-                                <label class="custom-control-label" for="color-5">Green</label>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="d-flex align-items-center mb-4 pt-2">
-                        <div class="input-group quantity mr-3" style="width: 130px;">
-                            <div class="input-group-btn">
-                                <button class="btn btn-primary btn-minus">
-                                    <i class="fa fa-minus"></i>
-                                </button>
-                            </div>
-                            <input type="text" class="form-control bg-secondary border-0 text-center" value="1">
-                            <div class="input-group-btn">
-                                <button class="btn btn-primary btn-plus">
-                                    <i class="fa fa-plus"></i>
-                                </button>
-                            </div>
-                        </div>
-                        <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To
-                            Cart</button>
-                    </div>
-                </div>
             </div>
         </div>
         <div class="row px-xl-5">
@@ -127,39 +105,20 @@
                         </div>
                         <div class="tab-pane fade" id="tab-pane-2">
                             <h4 class="mb-3">Additional Information</h4>
-                            <p>Eos no lorem eirmod diam diam, eos elitr et gubergren diam sea. Consetetur vero aliquyam invidunt duo dolores et duo sit. Vero diam ea vero et dolore rebum, dolor rebum eirmod consetetur invidunt sed sed et, lorem duo et eos elitr, sadipscing kasd ipsum rebum diam. Dolore diam stet rebum sed tempor kasd eirmod. Takimata kasd ipsum accusam sadipscing, eos dolores sit no ut diam consetetur duo justo est, sit sanctus diam tempor aliquyam eirmod nonumy rebum dolor accusam, ipsum kasd eos consetetur at sit rebum, diam kasd invidunt tempor lorem, ipsum lorem elitr sanctus eirmod takimata dolor ea invidunt.</p>
-                            <div class="row">
+                            
                                 <div class="col-md-6">
                                     <ul class="list-group list-group-flush">
-                                        <li class="list-group-item px-0">
-                                            Sit erat duo lorem duo ea consetetur, et eirmod takimata.
-                                        </li>
-                                        <li class="list-group-item px-0">
-                                            Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
-                                        </li>
-                                        <li class="list-group-item px-0">
-                                            Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                                        </li>
-                                        <li class="list-group-item px-0">
-                                            Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
-                                        </li>
-                                      </ul> 
-                                </div>
-                                <div class="col-md-6">
-                                    <ul class="list-group list-group-flush">
-                                        <li class="list-group-item px-0">
-                                            Sit erat duo lorem duo ea consetetur, et eirmod takimata.
-                                        </li>
-                                        <li class="list-group-item px-0">
-                                            Amet kasd gubergren sit sanctus et lorem eos sadipscing at.
-                                        </li>
-                                        <li class="list-group-item px-0">
-                                            Duo amet accusam eirmod nonumy stet et et stet eirmod.
-                                        </li>
-                                        <li class="list-group-item px-0">
-                                            Takimata ea clita labore amet ipsum erat justo voluptua. Nonumy.
-                                        </li>
-                                      </ul> 
+                                        <div class="row"> 
+                                            {% for info in product_d.informations.all %}
+                                                <div class="col-md-6"> 
+                                                    <ul class="list-group list-group-flush"> 
+                                                        <li class="list-group-item px-0" style="text-align: center;color: blue;"> 
+                                                            {{info.text}} 
+                                                        </li> 
+                                                    </ul> 
+                                                </div> 
+                                            {% endfor %}
+                                        </div>
                                 </div>
                             </div>
                         </div>
@@ -313,19 +272,4 @@
     <a href="#" class="btn btn-primary back-to-top"><i class="fa fa-angle-double-up"></i></a>
 
 
-    <!-- JavaScript Libraries -->
-    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
-    <script src="lib/easing/easing.min.js"></script>
-    <script src="lib/owlcarousel/owl.carousel.min.js"></script>
-
-    <!-- Contact Javascript File -->
-    <script src="mail/jqBootstrapValidation.min.js"></script>
-    <script src="mail/contact.js"></script>
-
-    <!-- Template Javascript -->
-    <script src="js/main.js"></script>
-</body>
-
-</html>
 {% endblock %}
