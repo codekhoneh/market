@@ -122,6 +122,11 @@ class Comment(models.Model):
     def likes_count(self):
         return self.likes.count()
 
+class  Information(models.Model)    : 
+    product=models.ForeignKey(Product,on_delete=models.CASCADE,related_name='informations',null=True) 
+    text=models.TextField() 
+    def __str__(self): 
+        return self.text[:30] 
 
 
 

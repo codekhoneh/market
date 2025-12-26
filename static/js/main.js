@@ -102,3 +102,21 @@
     
 })(jQuery);
 
+ $('.quantity button').on('click', function () {
+    var button = $(this);
+    var input = button.closest('.quantity').find('input'); // استفاده از closest برای انتخاب والدین نزدیکتر
+    var oldValue = parseInt(input.val()) || 0;
+    var newVal;
+
+    if (button.hasClass('btn-plus')) {
+        newVal = oldValue + 1;
+    } else {
+        if (oldValue > 1) {
+            newVal = oldValue - 1;
+        } else {
+            newVal = 1; // حداقل مقدار
+        }
+    }
+
+    input.val(newVal);
+});
