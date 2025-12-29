@@ -79,7 +79,7 @@
                         {% endif %}
                     </div>
 
-                    {% if product.size.all %}
+                    <!-- {% if product.size.all %}
                         <div class="mb-2">
                             {% for size in product.size.all %}
                                 <span class="badge badge-light border">{{ size.title }}</span>
@@ -93,18 +93,16 @@
                                 <span class="badge badge-pill badge-secondary">{{ color.title }}</span>
                             {% endfor %}
                         </div>
-                    {% endif %}
+                    {% endif %} -->
 
                     <div class="mt-auto d-flex justify-content-center">
-                        <a href="{% url 'product_detail' product.slug %}"
-                           class="btn btn-outline-dark btn-sm mx-1">
-                            مشاهده
-                        </a>
+                        
 
                         {% if product.is_available %}
-                            <button class="btn btn-primary btn-sm mx-1">
-                                افزودن به سبد
-                            </button>
+                            <a href="{% url 'product_detail' product.slug %}" class="btn btn-outline-dark btn-sm mx-1" 
+                            style="margin-top: 10px;font-size: x-large;">
+                                    مشاهده
+                            </a>
                         {% else %}
                             <button class="btn btn-secondary btn-sm mx-1" disabled>
                                 ناموجود

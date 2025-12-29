@@ -85,20 +85,22 @@
 
 
     // Product Quantity
-    $('.quantity button').on('click', function () {
-        var button = $(this);
-        var oldValue = button.parent().parent().find('input').val();
-        if (button.hasClass('btn-plus')) {
-            var newVal = parseFloat(oldValue) + 1;
-        } else {
-            if (oldValue > 0) {
-                var newVal = parseFloat(oldValue) - 1;
-            } else {
-                newVal = 0;
-            }
-        }
-        button.parent().parent().find('input').val(newVal);
-    });
-    
-})(jQuery);
+    $('.quantity button').on('click', function (e) {
+    e.preventDefault();
+    e.stopImmediatePropagation(); // ⭐⭐⭐ کلیدی‌ترین خط
 
+    var button = $(this);
+    var input = button.closest('.quantity').find('input');
+    var oldValue = parseInt(input.val()) || 1;
+    var newVal;
+
+    if (button.hasClass('btn-plus')) {
+        newVal = oldValue + 1;
+    } else {
+        newVal = oldValue > 1 ? oldValue - 1 : 1;
+    }
+
+    input.val(newVal);
+});
+
+})(jQuery);

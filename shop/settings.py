@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'home_app.apps.HomeAppConfig', 
     'account_app.apps.AccountAppConfig',
     'product_app.apps.ProductAppConfig',
+    'order_app.apps.OrderAppConfig', 
     'admin_persian',
 ]
 
