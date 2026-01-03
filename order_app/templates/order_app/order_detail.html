@@ -25,7 +25,17 @@ detail-product
                         <tr> 
                             <td class="align-middle"><img src="{{ item.product_d.image.url }}" alt="{{ item.product_d.title }}" style="width: 50px;"> {{ item.product_d.title }}</td> 
                             <td class="align-middle">{{ item.price }}</td> 
-                            <td class="align-middle">{{ item.quantity }}</td> 
+                            <td class="align-middle">
+                                <div class="d-flex justify-content-center align-items-center">
+                                    <a href="{% url 'order:order_item_decrease' item.unique_id %}"
+                                    class="btn btn-sm btn-secondary">-</a>
+
+                                    <span class="mx-2">{{ item.quantity }}</span>
+
+                                    <a href="{% url 'order:order_item_increase' item.unique_id %}"
+                                    class="btn btn-sm btn-secondary">+</a>
+                                </div>
+                                                        </td> 
                             <td class="align-middle">{{ item.total }}</td> 
                             <td class="align-middle">{{ item.size }}</td> 
                             <td class="align-middle">{{ item.color }}</td> 
@@ -150,23 +160,22 @@ times"></i></button></td>
                         </div> 
                     </div> 
                 </form> 
-                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg
-secondary pr-3">Cart Summary</span></h5> 
+                <h5 class="section-title position-relative text-uppercase mb-3"><span class="bg secondary pr-3">Cart Summary</span></h5> 
                 <div class="bg-light p-30 mb-5"> 
                     <div class="border-bottom pb-2"> 
                         <div class="d-flex justify-content-between mb-3"> 
                             <h6>Subtotal</h6> 
-                            <h6>$150</h6> 
+                            <h6>${{ cart.get_subtotal }}</h6> 
                         </div> 
                         <div class="d-flex justify-content-between"> 
                             <h6 class="font-weight-medium">Shipping</h6> 
-                            <h6 class="font-weight-medium">$10</h6> 
+                            <h6 class="font-weight-medium">${{ cart.get_total_price }}</h6> 
                         </div> 
                     </div> 
                     <div class="pt-2"> 
                         <div class="d-flex justify-content-between mt-2"> 
                             <h5>Total</h5> 
-                            <h5>$160</h5> 
+                            <h5>${{ cart.get_total_price }}</h5> 
                         </div> 
                         <button class="btn btn-block btn-primary font-weight-bold my-3 py-3">Proceed To 
 Checkout</button> 
