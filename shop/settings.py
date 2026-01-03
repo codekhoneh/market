@@ -41,7 +41,9 @@ INSTALLED_APPS = [
     'home_app.apps.HomeAppConfig', 
     'account_app.apps.AccountAppConfig',
     'product_app.apps.ProductAppConfig',
+    'order_app.apps.OrderAppConfig',
     'admin_persian',
+    
 ]
 
 MIDDLEWARE = [
@@ -67,6 +69,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                 'home_app.context_processors.cart_item_count',
             ],
         },
     },

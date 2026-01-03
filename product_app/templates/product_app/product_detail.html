@@ -105,8 +105,13 @@
                                 </button>
                             </div>
                         </div>
-                        <button class="btn btn-primary px-3"><i class="fa fa-shopping-cart mr-1"></i> Add To
-                            Cart</button>
+                        <form action="{% url 'add_to_cart' product_d.slug %}" method="post">
+                            {% csrf_token %}
+                            <button class="btn btn-primary px-3" type="submit">
+                                <i class="fa fa-shopping-cart mr-1"></i> افزودن به سبد خرید
+                            </button>
+                        </form>
+
                     </div>
                 </div>
             </div>

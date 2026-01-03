@@ -1,44 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView
 from .models import Product
+from django.views import View
+from order_app.models import Cart, CartItem
+from django.contrib import messages
+
 
 class ProductListView(ListView):
     model = Product
     template_name = "product_app/product_list.html"
     context_object_name = "products"
     paginate_by = 3
-
-    # def get_queryset(self):
-    #     queryset = Product.objects.filter(is_available=True)
-    #     price_filters = self.request.GET.getlist("price")
-    #     color_filters = self.request.GET.getlist("color")
-    #     size_filters = self.request.GET.getlist("size")
-    #     from django.db.models import Q
-
-    #     price_map = {
-    #         "0-100": (0, 100),
-    #         "100-200": (100, 200),
-    #         "200-300": (200, 300),
-    #     }
-
-    #     if price_filters:
-    #         q = Q()
-    #         for p in price_filters:
-    #             min_p, max_p = price_map[p]
-    #             q |= Q(price__gte=min_p, price__lte=max_p)
-    #         queryset = queryset.filter(q)
-
-    #     if color_filters:
-    #         queryset = queryset.filter(color__id__in=color_filters)
-
-    #     if size_filters:
-    #         queryset = queryset.filter(size__id__in=size_filters)
-
-    #     return queryset.distinct()
-
-
-
-
 
 
 class ProductDetailView(DetailView):
@@ -48,5 +20,39 @@ class ProductDetailView(DetailView):
     slug_field = "slug"
     slug_url_kwarg = "slug"
 
+class AddToCartView(View):
+    def post(self, request, product_slug):
+        # گرفتن محصول با استفاده از slug
+        product = get_object_or_404(Product, slug=product_slug)
+        
+        # دریافت یا ایجاد سبد خرید برای کاربر وارد شده یا جلسه (session)
+        if request.user.is_authenticated:
+            cart, created = Cart.objects.get_or_create(user=request.user, is_active=True)
+        else:
+            session_key = request.session.session_key
+            cart, created = Cart.objects.get_or_create(session_key=session_key, is_active=True)
+        
+        # چک کردن اینکه آیا محصول قبلاً در سبد خرید وجود دارد یا نه
+        # هنگام ایجاد آیتم جدید، مقدار `price` را در defaults قرار می‌دهیم
+        cart_item, created = CartItem.objects.get_or_create(
+            cart=cart,
+            product=product,
+            defaults={"price": product.price},
+        )
+        
+        # اگر محصول قبلاً وجود دارد، تعداد آن را افزایش می‌دهیم
+        if not created:
+            cart_item.quantity += 1
+        
+        # اختصاص قیمت محصول به price
+        cart_item.price = product.price 
+        cart_item.save()  # ذخیره تغییرات
+        # نمایش پیام موفقیت
+        messages.success(request, 'پیغام شما با موفقیت ثبت شد')
 
-# # Create your views here.
+        # بازگشت به صفحه قبلی یا صفحه محصول
+        referer = request.META.get('HTTP_REFERER')
+        if referer:
+            return redirect(referer)
+        return redirect('product_list')
+
