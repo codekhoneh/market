@@ -22,7 +22,7 @@ detail-product
                     </thead> 
                     <tbody class="align-middle"> 
                        {% for item in cart %} 
-                        tr> 
+                        <tr> 
                             <td class="align-middle"><img src="{{ item.product_d.image.url }}" alt="{{ item.product_d.title }}" style="width: 50px;"> {{ item.product_d.title }}</td> 
                             <td class="align-middle">{{ item.price }}</td> 
                             <td class="align-middle">{{ item.quantity }}</td> 
