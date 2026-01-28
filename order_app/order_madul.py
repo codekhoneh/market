@@ -1,8 +1,8 @@
 from product_app.models import Product
 from itertools import product, takewhile
 
+DISCOUNT_SESSION_ID = 'discount'  
 ORDER_SESSION_ID = 'cart'
-
 class Order:
     def __len__(self):
         
@@ -88,3 +88,58 @@ class Order:
     def clear(self):
         del self.session[ORDER_SESSION_ID]
         self.save()
+    @property 
+    def subtotal(self): 
+      return sum(item['total'] for item in self)            
+ 
+    # فیفخت لامعا 
+    def apply_discount(self, discount_type, value): 
+ 
+        self.session[DISCOUNT_SESSION_ID] = { 
+        'type': discount_type, 
+        'value': value 
+    } 
+        self.save()
+    @property 
+    def discount_amount(self): 
+        discount = self.session.get('discount') 
+ 
+        if not discount: 
+            return 0 
+ 
+        subtotal = self.subtotal 
+ 
+        if discount['type'] == 'percent': 
+            return subtotal * discount['value'] / 100 
+ 
+        if discount['type'] == 'fixed': 
+            return min(discount['value'], subtotal) 
+ 
+        return 0
+    @property 
+    def total(self): 
+     return self.subtotal - self.discount_amount   
+    def delete(self, id): 
+        if id in self.cart: 
+            del self.cart[id] 
+            self.save() 
+ 
+# فیفخت فذح 
+    def remove_discount(self): 
+        if DISCOUNT_SESSION_ID in self.session: 
+            del self.session[DISCOUNT_SESSION_ID] 
+            self.save()      
+    def add(self, product, quantity=1, color=None, size=None): 
+      unique = self._unique_id(product.id, color, size) 
+ 
+      if unique not in self.cart: 
+            self.cart[unique] = { 
+                  'id': product.id, 
+                  'quantity': 0, 
+                  'price': float(product.price), 
+                  'color': color, 
+                  'size': size, 
+            } 
+ 
+      self.cart[unique]['quantity'] += int(quantity) 
+      self.save()

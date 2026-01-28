@@ -1,0 +1,19 @@
+{% extends 'base.html' %} 
+{% block title %}Success{% endblock %} 
+{% block main %} 
+<div class="container mt-5 text-center"> 
+    <div class="card shadow p-5"> 
+        <h2 class="text-success mb-3">✅ سفارش با موفقیت ثبت شد</h2> 
+        <p>مبلغ پرداختی:</p> 
+        <h4 class="mb-3">#{{ order.id }}</h4> 
+        <p>مبلغ پرداختی :</p> 
+        <h5 class="text-primary">{{ order.total }} تومان</h5> 
+        <hr> 
+        <p>از خرید شما متشکریم</p> 
+        <a href="{% url 'home:main' %}" 
+           class="btn btn-outline-primary mt-3">
+           بازگشت به فروشگاه
+        </a> 
+    </div> 
+</div> 
+{% endblock %}
